@@ -28,7 +28,9 @@ services:
     restart: on-failure
     ports: 
       - 27017:27017
+    environment:
+      MONGO_INITDB_DATABASE: ec-backend
     volumes:
-      - ./docker-manifest/mongodb/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
-      - mongodb-data:./data/mongodb
-      - mongodb-log:./data/mongodblog
+      - ./docker-manifest/mongodb/mongo-init:/docker-entrypoint-initdb.d
+      - ./data/mongodb-data:/data/db
+      - ./data/mongodb-log:/var/log/mongodb
