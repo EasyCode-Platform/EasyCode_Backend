@@ -1,0 +1,34 @@
+services:
+  easycode_backend:
+    image: easycode_backend
+    restart: always
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - ec-postgres
+      # - ec-redis
+      - ec-mongodb
+  ec-postgres:
+    image: chichenn/ec-auth-postgres
+    build:
+      context: docker-manifest/ec-postgres
+      dockerfile: ./Dockerfile
+    ports:
+      - 5432:5432
+  # ec-redis:
+  #   image: redis:latest
+  #   command: --requirepass scut2023
+  #   ports:
+  #     - 6379:6379
+  ec-mongodb:
+    image: mongo:latest
+    restart: on-failure
+    ports: 
+      - 27017:27017
+    volumes:
+      - ./docker-manifest/mongodb/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
+      - mongodb-data:./data/mongodb
+      - mongodb-log:./data/mongodblog

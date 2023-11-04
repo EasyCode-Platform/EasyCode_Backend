@@ -6,19 +6,30 @@ require (
 	github.com/aws/aws-sdk-go v1.46.7
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/gin-gonic/gin v1.9.1
+	github.com/gofrs/uuid v4.4.0+incompatible
+	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/minio/minio-go/v7 v7.0.63
+	go.mongodb.org/mongo-driver v1.12.1
 	go.uber.org/zap v1.26.0
+	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
 	gorm.io/driver/postgres v1.5.4
 )
 
 require (
+	github.com/golang/snappy v0.0.1 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/pgx/v5 v5.4.3 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
+	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
 	github.com/rogpeppe/go-internal v1.11.0 // indirect
+	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
+	github.com/xdg-go/scram v1.1.2 // indirect
+	github.com/xdg-go/stringprep v1.0.4 // indirect
+	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
+	golang.org/x/sync v0.1.0 // indirect
 )
 
 require (
@@ -32,7 +43,7 @@ require (
 	github.com/go-playground/validator/v10 v10.14.0 // indirect
 	github.com/go-resty/resty/v2 v2.10.0
 	github.com/goccy/go-json v0.10.2 // indirect
-	github.com/google/uuid v1.3.0 // indirect
+	github.com/google/uuid v1.3.0
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.16.7 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.5 // indirect
