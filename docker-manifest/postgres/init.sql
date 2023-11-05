@@ -18,14 +18,9 @@ create table if not exists apps (
     id                      bigserial                       not null primary key,
     uid                     uuid default gen_random_uuid()  not null,
     team_id                 bigserial                       not null,
-    name                    varchar(200)                    not null,
-    release_version         bigint                          not null,
-    mainline_version        bigint                          not null,
+    name                    text                  not null,
+    component_id            text                            not null,
     config                  jsonb,
     created_at              timestamp                       not null,
-    created_by              bigint                          not null,
     updated_at              timestamp                       not null,
-    updated_by              bigint                          not null,
-    edited_by               jsonb
-
 );

@@ -16,11 +16,20 @@ type MongoDbStorage struct {
 	collection *mongo.Collection
 }
 
+// NewMongoDb
+// @param db
+// @param collection
+// @return *MongoDbStorage
 func NewMongoDb(db *mongo.Database, collection string) *MongoDbStorage {
 
 	return &MongoDbStorage{db, db.Collection(collection)}
 }
 
+// jsonStr2Bson
+// @receiver m
+// @param str
+// @return interface{}
+// @return error
 func (m *MongoDbStorage) jsonStr2Bson(str string) (interface{}, error) {
 	var want interface{}
 	err := bson.UnmarshalJSON([]byte(str), &want)
@@ -31,6 +40,10 @@ func (m *MongoDbStorage) jsonStr2Bson(str string) (interface{}, error) {
 }
 
 // InsertToDb 直接插入Json字段
+// @receiver m
+// @param wantStr
+// @return string
+// @return error
 func (m *MongoDbStorage) InsertToDb(wantStr string) (string, error) {
 	if wantStr == "" {
 		return "", errors.New("转换的字符串为空")
@@ -51,6 +64,11 @@ func (m *MongoDbStorage) InsertToDb(wantStr string) (string, error) {
 }
 
 // FindInfoByField 通过字段与KEY进行查询
+// @receiver m
+// @param field
+// @param want
+// @return string
+// @return error
 func (m *MongoDbStorage) FindInfoByField(field, want string) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -75,6 +93,10 @@ func (m *MongoDbStorage) FindInfoByField(field, want string) (string, error) {
 }
 
 // FindInfoById 通过Mongo自己的ID进行查询
+// @receiver m
+// @param id
+// @return string
+// @return error
 func (m *MongoDbStorage) FindInfoById(id string) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

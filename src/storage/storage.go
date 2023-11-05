@@ -17,6 +17,11 @@ type Storage struct {
 	// TreeStateStorage   *TreeStateStorage
 }
 
+// NewStorage
+// @param postgresDriver
+// @param mongodb
+// @param logger
+// @return *Storage
 func NewStorage(postgresDriver *gorm.DB, mongodb *mongo.Database, logger *zap.SugaredLogger) *Storage {
 	return &Storage{
 		ComponentStorage: NewComponentStorage(logger, mongodb),
