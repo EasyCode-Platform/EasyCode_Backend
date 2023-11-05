@@ -54,9 +54,9 @@ type Config struct {
 	// storage config
 	PostgresAddr         string `env:"PG_ADDR" envDefault:"localhost"`
 	PostgresPort         string `env:"PG_PORT" envDefault:"5432"`
-	PostgresUser         string `env:"PG_USER" envDefault:"ec_builder"`
-	PostgresPassword     string `env:"PG_PASSWORD" envDefault:"71De5JllWSetLYU"`
-	PostgresDatabase     string `env:"PG_DATABASE" envDefault:"ec_builder"`
+	PostgresUser         string `env:"PG_USER" envDefault:"ec_backend"`
+	PostgresPassword     string `env:"PG_PASSWORD" envDefault:"scut2023"`
+	PostgresDatabase     string `env:"PG_DATABASE" envDefault:"ec_backend"`
 	MongodbAddr          string `env:"MONGODB_ADDR" envDefault:"localhost"`
 	MongodbPort          string `env:"MONGODB_PORT" envDefault:"27017"`
 	MongodbDatabase      string `env:"MONGODB_DATABASE" envDefault:"easycode"`
