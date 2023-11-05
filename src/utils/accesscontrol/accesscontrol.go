@@ -158,7 +158,7 @@ const (
 	ACTION_MANAGE_FORK_AI_AGENT   // fork AI-Agent
 	ACTION_MANAGE_RUN_AI_AGENT    // run ai-agent
 
-	ACTION_MANAGE_FORK_APP // for app
+	ACTION_MANAGE_FORK_APP // fork app
 )
 
 // action delete

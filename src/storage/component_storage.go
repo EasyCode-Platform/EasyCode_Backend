@@ -36,13 +36,13 @@ func (impl *ComponentStorage) CreateNewComponent(componentJson string) (string, 
 
 // RetrieveComponent
 // @receiver impl
-// @param componentId
+// @param ComponentId
 // @return string
 // @return error
-func (impl *ComponentStorage) RetrieveComponent(componentId string) (string, error) {
-	str, err := impl.storage.FindInfoById(componentId)
+func (impl *ComponentStorage) RetrieveComponent(ComponentId string) (string, error) {
+	str, err := impl.storage.FindInfoById(ComponentId)
 	if err != nil {
-		impl.logger.Errorw("Can not retrieve component %", componentId)
+		impl.logger.Errorw("Can not retrieve component %", ComponentId)
 		return "", err
 	}
 	return str, nil

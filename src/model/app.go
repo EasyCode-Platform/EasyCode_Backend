@@ -9,19 +9,19 @@ import (
 type App struct {
 	ID          int       `json:"id" 				gorm:"column:id;type:bigserial;primary_key;unique"`
 	UID         uuid.UUID `json:"uid"   		    gorm:"column:uid;type:uuid;not null"`
-	TeamID      int       `json:"teamID" 		    gorm:"column:team_id;type:bigserial"`
+	TeamID      int       `json:"teamID" 		    gorm:"column:team_id"`
 	Name        string    `json:"name" 				gorm:"column:name;type:text"`
-	componentId string    `json:"name" 				gorm:"column:coponent_id;type:text;notnull"`
+	ComponentId string    `json:"name" 				gorm:"column:coponent_id;type:text;notnull"`
 	Config      string    `json:"config" 	        gorm:"column:config;type:jsonb"`
 	CreatedAt   time.Time `json:"createdAt" 		gorm:"column:created_at;type:timestamp"`
 	UpdatedAt   time.Time `json:"updatedAt" 		gorm:"column:updated_at;type:timestamp"`
 }
 
-func NewApp(appName string, teamID int, modifyUserID int, componentId string) *App {
+func NewApp(appName string, teamID int, modifyUserID int, ComponentId string) *App {
 	return &App{
 		TeamID:      teamID,
 		Name:        appName,
-		componentId: componentId,
+		ComponentId: ComponentId,
 		Config:      NewAppConfig().ExportToJSONString(),
 		CreatedAt:   time.Now().UTC(),
 		UpdatedAt:   time.Now().UTC(),
