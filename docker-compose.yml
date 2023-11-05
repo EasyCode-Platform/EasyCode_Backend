@@ -1,21 +1,22 @@
 services:
   easycode_backend:
-    image: easycode_backend
-    restart: always
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    network_mode: host
+    restart: on-failure
+    build: .
     ports:
-      - 8080:8080
+      - 8003:8003
     depends_on:
       - ec-postgres
       # - ec-redis
       - ec-mongodb
   ec-postgres:
-    image: chichenn/ec-auth-postgres
-    build:
-      context: docker-manifest/ec-postgres
-      dockerfile: ./Dockerfile
+    network_mode: host
+    image: postgres:latest
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - ./docker-manifest/postgres/postgres-init:/docker-entrypoint-initdb.d
+      - ./data/postgres-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
   # ec-redis:
@@ -24,12 +25,13 @@ services:
   #   ports:
   #     - 6379:6379
   ec-mongodb:
+    network_mode: host
     image: mongo:latest
     restart: on-failure
-    ports: 
+    ports:
       - 27017:27017
     environment:
-      MONGO_INITDB_DATABASE: ec-backend
+      MONGO_INITDB_DATABASE: ec_backend
     volumes:
       - ./docker-manifest/mongodb/mongo-init:/docker-entrypoint-initdb.d
       - ./data/mongodb-data:/data/db

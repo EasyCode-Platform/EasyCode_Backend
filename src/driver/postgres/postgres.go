@@ -13,7 +13,7 @@ import (
 const RETRY_TIMES = 6
 
 type PostgresConfig struct {
-	Addr     string `env:"PG_ADDR" envDefault:"localhost"`
+	Addr     string `env:"PG_ADDR" envDefault:"ec-postgres"`
 	Port     string `env:"PG_PORT" envDefault:"5433"`
 	User     string `env:"PG_USER" envDefault:"ec_cloud"`
 	Password string `env:"PG_PASSWORD" envDefault:"ec2022"`

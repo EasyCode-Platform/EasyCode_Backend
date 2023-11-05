@@ -1,6 +1,6 @@
 mongosh <<EOF
 
-use ec-backend
+use ec_backend
 
 db.createCollection("components")
 

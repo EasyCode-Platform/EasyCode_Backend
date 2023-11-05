@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/caarlos0/env"
+	"github.com/caarlos0/env/v10"
 )
 
 const DEPLOY_MODE_SELF_HOST = "self-host"
@@ -38,9 +38,9 @@ func GetInstance() *Config {
 type Config struct {
 	// server config
 	ServerHost                    string `env:"SERVER_HOST"                    envDefault:"0.0.0.0"`
-	ServerPort                    string `env:"SERVER_PORT"                    envDefault:"8001"`
+	ServerPort                    string `env:"SERVER_PORT"                    envDefault:"8003"`
 	InternalServerPort            string `env:"SERVER_INTERNAL_PORT"           envDefault:"9005"`
-	ServerMode                    string `env:"SERVER_MODE"                    envDefault:"debug"`
+	ServerMode                    string `env:"SERVER_MODE"                    envDefault:"release"`
 	DeployMode                    string `env:"DEPLOY_MODE"                    envDefault:"self-host"`
 	SecretKey                     string `env:"SECRET_KEY"                     envDefault:"8xEMrWkBARcDDYQ"`
 	WebsocketServerHost           string `env:"WEBSOCKET_SERVER_HOST"          envDefault:"0.0.0.0"`
@@ -59,7 +59,7 @@ type Config struct {
 	PostgresDatabase     string `env:"PG_DATABASE" envDefault:"ec_backend"`
 	MongodbAddr          string `env:"MONGODB_ADDR" envDefault:"localhost"`
 	MongodbPort          string `env:"MONGODB_PORT" envDefault:"27017"`
-	MongodbDatabase      string `env:"MONGODB_DATABASE" envDefault:"easycode"`
+	MongodbDatabase      string `env:"MONGODB_DATABASE" envDefault:"ec_backend"`
 	MongodbMaxCollection int64  `env:"MONGODB_MAXCOLLECTION" envDefault:"10"`
 	// cache config
 	RedisAddr     string `env:"REDIS_ADDR" envDefault:"localhost"`

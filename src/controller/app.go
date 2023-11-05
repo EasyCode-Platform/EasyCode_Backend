@@ -3,8 +3,8 @@ package controller
 import (
 	"encoding/json"
 
-	"github.com/EasyCode-Platform/EasyCode_Backend/request"
 	"github.com/EasyCode-Platform/EasyCode_Backend/src/model"
+	"github.com/EasyCode-Platform/EasyCode_Backend/src/request"
 	"github.com/EasyCode-Platform/EasyCode_Backend/src/utils/accesscontrol"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"

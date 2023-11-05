@@ -4,8 +4,6 @@ import (
 	"os"
 
 	"github.com/EasyCode-Platform/EasyCode_Backend/src/controller"
-	"github.com/EasyCode-Platform/EasyCode_Backend/src/drive"
-	"github.com/EasyCode-Platform/EasyCode_Backend/src/driver/awss3"
 	"github.com/EasyCode-Platform/EasyCode_Backend/src/driver/mongodb"
 	"github.com/EasyCode-Platform/EasyCode_Backend/src/driver/postgres"
 	"github.com/EasyCode-Platform/EasyCode_Backend/src/router"
@@ -48,17 +46,6 @@ func initStorage(globalConfig *config.Config, logger *zap.SugaredLogger) *storag
 	return storage.NewStorage(postgresDriver, mongodbDriver, logger)
 }
 
-func initDrive(globalConfig *config.Config, logger *zap.SugaredLogger) *drive.Drive {
-	if globalConfig.IsAWSTypeDrive() {
-		teamAWSConfig := awss3.NewTeamAwsConfigByGlobalConfig(globalConfig)
-		teamDriveS3Instance := awss3.NewS3Drive(teamAWSConfig)
-		return drive.NewDrive(teamDriveS3Instance, logger)
-	}
-	// failed
-	logger.Errorw("Error in startup, drive init failed.")
-	return nil
-}
-
 func initServer() (*Server, error) {
 	globalConfig := config.GetInstance()
 	engine := gin.New()
@@ -69,7 +56,6 @@ func initServer() (*Server, error) {
 
 	// init driver
 	storage := initStorage(globalConfig, sugaredLogger)
-	drive := initDrive(globalConfig, sugaredLogger)
 
 	// init attribute group
 	attrg, errInNewAttributeGroup := accesscontrol.NewRawAttributeGroup()
@@ -78,7 +64,7 @@ func initServer() (*Server, error) {
 	}
 
 	// init controller
-	c := controller.NewControllerForBackend(storage, drive, validator, attrg)
+	c := controller.NewControllerForBackend(storage, validator, attrg)
 	router := router.NewRouter(c)
 	server := NewServer(globalConfig, engine, router, sugaredLogger)
 	return server, nil
@@ -89,26 +75,27 @@ func (server *Server) Start() {
 	server.logger.Infow("Starting ec-builder-backend...")
 
 	// init
-	gin.SetMode(server.config.ServerMode)
+	gin.SetMode(gin.ReleaseMode)
 
 	// init cors
 	server.engine.Use(gin.CustomRecovery(recovery.CorsHandleRecovery))
 	server.engine.Use(cors.Cors())
 	server.router.RegisterRouters(server.engine)
-
 	// run
+	server.logger.Infow("ec-builder-backend started")
 	err := server.engine.Run(server.config.ServerHost + ":" + server.config.ServerPort)
 	if err != nil {
 		server.logger.Errorw("Error in startup", "err", err)
 		os.Exit(2)
 	}
+
 }
 
 func main() {
 	server, err := initServer()
 
 	if err != nil {
-
+		server.logger.Errorw("Error in startup, failed to initServer", "err", err)
 	}
 
 	server.Start()

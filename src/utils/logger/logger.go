@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"github.com/caarlos0/env"
+	"github.com/caarlos0/env/v10"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
