@@ -6,11 +6,14 @@ WORKDIR /app
 COPY ./src /app/src
 COPY ./go.mod /app/go.mod
 COPY ./go.sum /app/go.sum
+COPY ./Makefile /app/Makefile
 # 环境变量
 #  用于代理下载go项目依赖的包
 ENV GOPROXY https://goproxy.cn,direct
+# 添加 make 依赖项
+RUN apk add --no-cache make
 # 编译，关闭CGO，防止编译后的文件有动态链接，而alpine镜像里有些c库没有，直接没有文件的错误
-RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-w -s" ./src/cmd/backend/main.go
+RUN make docker-build
 
 
 # 使用alpine这个轻量级镜像为基础镜像--运行阶段

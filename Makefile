@@ -3,7 +3,7 @@
 all: build
 
 docker-build:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o bin/easycode-backend ./src/cmd/backend/main.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" ./src/cmd/backend/main.go
 
 run :
 	go run ./src/cmd/backend/main.go
