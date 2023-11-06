@@ -1,6 +1,6 @@
 module github.com/EasyCode-Platform/EasyCode_Backend
 
-go 1.21.0
+go 1.21
 
 require (
 	github.com/aws/aws-sdk-go v1.46.7
