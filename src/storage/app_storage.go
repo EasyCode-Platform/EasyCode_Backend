@@ -24,7 +24,7 @@ func NewAppStorage(logger *zap.SugaredLogger, db *gorm.DB) *AppStorage {
 // CreateApp
 // @receiver impl
 // @param app
-// @return int
+// @return int app.id
 // @return error
 func (impl *AppStorage) CreateApp(app *model.App) (int, error) {
 	if err := impl.db.Create(app).Error; err != nil {
@@ -33,6 +33,11 @@ func (impl *AppStorage) CreateApp(app *model.App) (int, error) {
 	return app.ID, nil
 }
 
+// RetrieveAllApp
+// @receiver impl
+// @param teamId
+// @return []*model.App
+// @return error
 func (impl *AppStorage) RetrieveAllApp(teamId int) ([]*model.App, error) {
 	var apps []*model.App
 	if err := impl.db.Where("teamID = ?", teamId).Find(&apps).Error; err != nil {
@@ -55,6 +60,12 @@ func (impl *AppStorage) RetrieveAppByUid(uid int) (*model.App, error) {
 	return app, nil
 }
 
+// RetrieveAppByName
+// @receiver impl
+// @param teamId
+// @param name
+// @return []*model.App
+// @return error
 func (impl *AppStorage) RetrieveAppByName(teamId int, name string) ([]*model.App, error) {
 	var apps []*model.App
 	if err := impl.db.Where("teamID = ? and name = ?", teamId, name).Find(&apps).Error; err != nil {

@@ -238,6 +238,12 @@ func (controller *Controller) GetOptionalStringFromFormData(c *gin.Context, para
 	return paramValue[0]
 }
 
+// GetMagicIntParamFromRequest
+// @receiver controller
+// @param c
+// @param paramName
+// @return int
+// @return error
 func (controller *Controller) GetMagicIntParamFromRequest(c *gin.Context, paramName string) (int, error) {
 	// get request param
 	paramValue := c.Param(paramName)
@@ -254,7 +260,12 @@ func (controller *Controller) GetMagicIntParamFromRequest(c *gin.Context, paramN
 	return paramValueInt, nil
 }
 
-// test if Magic int exists in param, if not ,return 0 and an error.
+// TestMagicIntParamFromRequest test if Magic int exists in param, if not ,return 0 and an error.
+// @receiver controller
+// @param c
+// @param paramName
+// @return int
+// @return error
 func (controller *Controller) TestMagicIntParamFromRequest(c *gin.Context, paramName string) (int, error) {
 	// get request param
 	paramValue := c.Param(paramName)
@@ -265,6 +276,12 @@ func (controller *Controller) TestMagicIntParamFromRequest(c *gin.Context, param
 	return paramValueInt, nil
 }
 
+// GetIntParamFromRequest
+// @receiver controller
+// @param c
+// @param paramName
+// @return int
+// @return error
 func (controller *Controller) GetIntParamFromRequest(c *gin.Context, paramName string) (int, error) {
 	// get request param
 	paramValue := c.Param(paramName)
@@ -280,6 +297,12 @@ func (controller *Controller) GetIntParamFromRequest(c *gin.Context, paramName s
 	return paramValueInt, nil
 }
 
+// GetStringParamFromRequest
+// @receiver controller
+// @param c
+// @param paramName
+// @return string
+// @return error
 func (controller *Controller) GetStringParamFromRequest(c *gin.Context, paramName string) (string, error) {
 	// get request param
 	paramValue := c.Param(paramName)
@@ -290,6 +313,12 @@ func (controller *Controller) GetStringParamFromRequest(c *gin.Context, paramNam
 	return paramValue, nil
 }
 
+// TestStringParamFromRequest
+// @receiver controller
+// @param c
+// @param paramName
+// @return string
+// @return error
 func (controller *Controller) TestStringParamFromRequest(c *gin.Context, paramName string) (string, error) {
 	// get request param
 	paramValue := c.Param(paramName)
@@ -299,6 +328,12 @@ func (controller *Controller) TestStringParamFromRequest(c *gin.Context, paramNa
 	return paramValue, nil
 }
 
+// TestFirstStringParamValueFromURI
+// @receiver controller
+// @param c
+// @param paramName
+// @return string
+// @return error
 func (controller *Controller) TestFirstStringParamValueFromURI(c *gin.Context, paramName string) (string, error) {
 	valueMaps := c.Request.URL.Query()
 	paramValues, hit := valueMaps[paramName]
@@ -309,6 +344,12 @@ func (controller *Controller) TestFirstStringParamValueFromURI(c *gin.Context, p
 	return paramValues[0], nil
 }
 
+// GetFirstStringParamValueFromURI
+// @receiver controller
+// @param c
+// @param paramName
+// @return string
+// @return error
 func (controller *Controller) GetFirstStringParamValueFromURI(c *gin.Context, paramName string) (string, error) {
 	valueMaps := c.Request.URL.Query()
 	paramValues, hit := valueMaps[paramName]
@@ -320,6 +361,12 @@ func (controller *Controller) GetFirstStringParamValueFromURI(c *gin.Context, pa
 	return paramValues[0], nil
 }
 
+// GetStringParamValuesFromURI
+// @receiver controller
+// @param c
+// @param paramName
+// @return []string
+// @return error
 func (controller *Controller) GetStringParamValuesFromURI(c *gin.Context, paramName string) ([]string, error) {
 	valueMaps := c.Request.URL.Query()
 	paramValues, hit := valueMaps[paramName]
@@ -331,6 +378,12 @@ func (controller *Controller) GetStringParamValuesFromURI(c *gin.Context, paramN
 	return paramValues, nil
 }
 
+// GetStringParamFromHeader
+// @receiver controller
+// @param c
+// @param paramName
+// @return string
+// @return error
 func (controller *Controller) GetStringParamFromHeader(c *gin.Context, paramName string) (string, error) {
 	paramValue := c.Request.Header[paramName]
 	var ret string
@@ -343,7 +396,11 @@ func (controller *Controller) GetStringParamFromHeader(c *gin.Context, paramName
 	return ret, nil
 }
 
-// @note: this param was setted by authenticator.JWTAuth() method
+// GetUserIDFromAuth @note: this param was setted by authenticator.JWTAuth() method
+// @receiver controller
+// @param c
+// @return int
+// @return error
 func (controller *Controller) GetUserIDFromAuth(c *gin.Context) (int, error) {
 	// get request param
 	userID, ok := c.Get("userID")
@@ -359,6 +416,10 @@ func (controller *Controller) GetUserIDFromAuth(c *gin.Context) (int, error) {
 	return userIDInt, nil
 }
 
+// FeedbackOK
+// @receiver controller
+// @param c
+// @param resp
 func (controller *Controller) FeedbackOK(c *gin.Context, resp response.Response) {
 	if resp != nil {
 		c.JSON(http.StatusOK, resp.ExportForFeedback())
@@ -368,6 +429,10 @@ func (controller *Controller) FeedbackOK(c *gin.Context, resp response.Response)
 	c.JSON(http.StatusOK, nil)
 }
 
+// FeedbackCreated
+// @receiver controller
+// @param c
+// @param resp
 func (controller *Controller) FeedbackCreated(c *gin.Context, resp response.Response) {
 	if resp != nil {
 		c.JSON(http.StatusCreated, resp.ExportForFeedback())
@@ -377,6 +442,11 @@ func (controller *Controller) FeedbackCreated(c *gin.Context, resp response.Resp
 	c.JSON(http.StatusCreated, nil)
 }
 
+// FeedbackBadRequest
+// @receiver controller
+// @param c
+// @param errorFlag
+// @param errorMessage
 func (controller *Controller) FeedbackBadRequest(c *gin.Context, errorFlag string, errorMessage string) {
 	c.JSON(http.StatusBadRequest, gin.H{
 		"errorCode":    400,
@@ -386,11 +456,20 @@ func (controller *Controller) FeedbackBadRequest(c *gin.Context, errorFlag strin
 	return
 }
 
+// FeedbackRedirect
+// @receiver controller
+// @param c
+// @param uri
 func (controller *Controller) FeedbackRedirect(c *gin.Context, uri string) {
 	c.Redirect(302, uri)
 	return
 }
 
+// FeedbackInternalServerError
+// @receiver controller
+// @param c
+// @param errorFlag
+// @param errorMessage
 func (controller *Controller) FeedbackInternalServerError(c *gin.Context, errorFlag string, errorMessage string) {
 	c.JSON(http.StatusInternalServerError, gin.H{
 		"errorCode":    500,

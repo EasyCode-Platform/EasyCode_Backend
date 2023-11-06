@@ -5,11 +5,15 @@ import (
 
 	"github.com/EasyCode-Platform/EasyCode_Backend/src/model"
 	"github.com/EasyCode-Platform/EasyCode_Backend/src/request"
+	"github.com/EasyCode-Platform/EasyCode_Backend/src/response"
 	"github.com/EasyCode-Platform/EasyCode_Backend/src/utils/accesscontrol"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
 
+// CreateApp
+// @receiver controller
+// @param c
 func (controller *Controller) CreateApp(c *gin.Context) {
 	// fetch needed param
 	teamID, errInGetTeamID := controller.GetMagicIntParamFromRequest(c, PARAM_TEAM_ID)
@@ -64,8 +68,13 @@ func (controller *Controller) CreateApp(c *gin.Context) {
 		controller.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_CREATE_APP, "error in create app: "+errInCreateApp.Error())
 		return
 	}
+	appResponse := response.NewAppResponse(newApp)
+	controller.FeedbackOK(c, appResponse)
 }
 
+// RetrieveApp
+// @receiver controller
+// @param c
 func (controller *Controller) RetrieveApp(c *gin.Context) {
 	// fetch needed param
 	teamID, errInGetTeamID := controller.GetMagicIntParamFromRequest(c, PARAM_TEAM_ID)
