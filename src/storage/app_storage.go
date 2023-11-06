@@ -40,7 +40,7 @@ func (impl *AppStorage) CreateApp(app *model.App) (int, error) {
 // @return error
 func (impl *AppStorage) RetrieveAllApp(teamId int) ([]*model.App, error) {
 	var apps []*model.App
-	if err := impl.db.Where("teamID = ?", teamId).Find(&apps).Error; err != nil {
+	if err := impl.db.Where("team_id = ?", teamId).Find(&apps).Error; err != nil {
 		return nil, err
 	}
 	return apps, nil

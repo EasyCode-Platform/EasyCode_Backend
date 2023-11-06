@@ -5,11 +5,18 @@ all: build
 docker-build:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" ./src/cmd/backend/main.go
 
+docker-run:
+	docker-compose -f ./docker-compose.yml up
+
+docker-database:
+	docker-compose -f ./docker-compose-database.yml up 
+
 run :
 	go run ./src/cmd/backend/main.go
 
 test:
-	PROJECT_PWD=$(shell pwd) go test -race ./...
+#	测试项
+	PROJECT_PWD=$(shell pwd) go test -race ./src/storage
 
 test-cover:
 	go test -cover --count=1 ./...
