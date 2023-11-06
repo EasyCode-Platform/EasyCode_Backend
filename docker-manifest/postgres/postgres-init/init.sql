@@ -15,10 +15,14 @@ CREATE EXTENSION btree_gin;
 create table if not exists apps (
     id bigserial not null primary key,
     uid uuid default gen_random_uuid() not null,
-    team_id  not null,
+    team_id int not null,
     name text not null,
     component_id text not null,
     config jsonb,
     created_at timestamp not null,
     updated_at timestamp not null
-    );
+);
+
+GRANT ALL PRIVILEGES ON TABLE apps TO ec_backend;
+
+GRANT ALL PRIVILEGES ON TABLE apps_id_seq TO ec_backend;
