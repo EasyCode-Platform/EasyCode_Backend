@@ -16,7 +16,7 @@ run :
 
 test:
 #	测试项
-	PROJECT_PWD=$(shell pwd) go test -race ./src/storage
+	PROJECT_PWD=$(shell pwd) go test -race -v ./src/storage
 
 test-cover:
 	go test -cover --count=1 ./...
