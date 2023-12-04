@@ -185,18 +185,18 @@ func (ps *PostgresqlStorage) DeleteTable(tid uuid.UUID) error {
 	return nil
 }
 
-func (ps *PostgresqlStorage) GetTableData(tid uuid.UUID) ([]entities.Field, []entities.Record, error) {
+func (ps *PostgresqlStorage) GetTableData(tid uuid.UUID) (entities.TableData, error) {
 	// 查询字段数据
 	fieldQuery := `
-		SELECT name, type
-		FROM table_fields
-		WHERE tid = $1
-		ORDER BY field_id
-	`
+        SELECT name, type
+        FROM table_fields
+        WHERE tid = $1
+        ORDER BY name
+    `
 	fieldRows, err := ps.db.Query(fieldQuery, tid)
 	if err != nil {
 		log.Println("Error querying table fields:", err)
-		return nil, nil, err
+		return entities.TableData{}, err
 	}
 	defer fieldRows.Close()
 
@@ -209,7 +209,7 @@ func (ps *PostgresqlStorage) GetTableData(tid uuid.UUID) ([]entities.Field, []en
 		err := fieldRows.Scan(&name, &fieldType)
 		if err != nil {
 			log.Println("Error scanning table fields:", err)
-			return nil, nil, err
+			return entities.TableData{}, err
 		}
 
 		field := entities.Field{
@@ -222,35 +222,50 @@ func (ps *PostgresqlStorage) GetTableData(tid uuid.UUID) ([]entities.Field, []en
 
 	// 查询记录数据
 	recordQuery := `
-		SELECT field_name, field_value
-		FROM table_records
-		WHERE tid = $1
-		ORDER BY record_id
-	`
+        SELECT entity_id, field_name, field_value
+        FROM table_records
+        WHERE tid = $1
+        ORDER BY entity_id, field_name
+    `
 	recordRows, err := ps.db.Query(recordQuery, tid)
 	if err != nil {
 		log.Println("Error querying table records:", err)
-		return nil, nil, err
+		return entities.TableData{}, err
 	}
 	defer recordRows.Close()
 
-	var records []entities.Record
+	tempRecords := make(map[int]map[string]interface{})
+	var records []map[string]interface{}
 
 	for recordRows.Next() {
+		var entityID int
 		var fieldName string
-		var fieldValue sql.NullString
+		var fieldValue interface{} // 使用 interface{} 来处理不同类型的值
 
-		err := recordRows.Scan(&fieldName, &fieldValue)
+		err := recordRows.Scan(&entityID, &fieldName, &fieldValue)
 		if err != nil {
 			log.Println("Error scanning table records:", err)
-			return nil, nil, err
+			return entities.TableData{}, err
 		}
 
-		record := make(map[string]interface{})
-		record[fieldName] = fieldValue.String
+		// 检查是否已存在该 entityID 的记录
+		if _, exists := tempRecords[entityID]; !exists {
+			tempRecords[entityID] = make(map[string]interface{})
+		}
 
+		// 添加字段到对应的记录中
+		tempRecords[entityID][fieldName] = fieldValue
+	}
+
+	// 将临时 map 转换为所需的 records 列表
+	for _, record := range tempRecords {
 		records = append(records, record)
 	}
 
-	return fields, records, nil
+	tableData := entities.TableData{
+		Fields:  fields,
+		Records: records,
+	}
+
+	return tableData, nil
 }

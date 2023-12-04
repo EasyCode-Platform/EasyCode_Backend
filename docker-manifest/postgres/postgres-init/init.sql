@@ -38,21 +38,25 @@ CREATE TABLE IF NOT EXISTS tables (
 );
 
 CREATE TABLE IF NOT EXISTS table_fields (
-    field_id SERIAL PRIMARY KEY,
     tid bytea NOT NULL,
     name VARCHAR(255) NOT NULL,
     type VARCHAR(255) NOT NULL,
+    PRIMARY KEY (tid, name),
     FOREIGN KEY (tid) REFERENCES tables(tid)
 );
 
 CREATE TABLE IF NOT EXISTS table_records (
     record_id SERIAL PRIMARY KEY,
+    entity_id INT NOT NULL,  -- 添加这个字段来标识同一实体的不同记录
     tid bytea NOT NULL,
     field_name VARCHAR(255) NOT NULL,
     field_value TEXT,
-   FOREIGN KEY (tid) REFERENCES tables(tid),
-   FOREIGN KEY (field_name) REFERENCES table_fields(name)
+    FOREIGN KEY (tid) REFERENCES tables(tid),
+    FOREIGN KEY (tid,field_name) REFERENCES table_fields(tid,name)
 );
 
 GRANT ALL PRIVILEGES ON TABLE apps TO ec_backend;
-
+GRANT ALL PRIVILEGES ON TABLE  tables TO ec_backend;
+GRANT ALL PRIVILEGES ON TABLE app_data TO ec_backend;
+GRANT ALL PRIVILEGES ON TABLE table_fields TO ec_backend;
+GRANT ALL PRIVILEGES ON TABLE table_records TO ec_backend;

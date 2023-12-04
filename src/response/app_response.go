@@ -45,6 +45,5 @@ type RenameTableResponse struct {
 }
 
 type GetTableDataResponse struct {
-	Field  []entities.Field  `json:"field"`
-	Record []entities.Record `json:"record"`
+	TableData entities.TableData
 }

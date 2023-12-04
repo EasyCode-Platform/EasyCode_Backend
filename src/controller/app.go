@@ -234,7 +234,7 @@ func (controller *Controller) GetTableData(c *gin.Context) {
 
 	u, err := uuid.Parse(tid)
 
-	field, record, err := model.GetTableData(u, newLogger)
+	tableData, err := model.GetTableData(u, newLogger)
 
 	if err != nil {
 		controller.FeedbackInternalServerError(c, "Error fetching appsdata", err.Error())
@@ -243,8 +243,7 @@ func (controller *Controller) GetTableData(c *gin.Context) {
 
 	// 使用 GetAppResponse 结构构造响应
 	response := response.GetTableDataResponse{
-		Field:  field,
-		Record: record,
+		TableData: tableData,
 	}
 
 	c.JSON(http.StatusOK, response)

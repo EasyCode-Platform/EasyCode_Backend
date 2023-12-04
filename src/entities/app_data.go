@@ -24,16 +24,17 @@ type AppData struct {
 }
 
 type Table struct {
-	Tid     uuid.UUID `json:"tid"`
-	Name    string    `json:"name"`
-	AppAid  uuid.UUID `json:"-"`       // 序列化时忽略此字段
-	Fields  []Field   `json:"fields"`  // 新增字段，用于存储字段信息
-	Records []Record  `json:"records"` // 新增字段，用于存储记录信息
+	Tid    uuid.UUID `json:"tid"`
+	Name   string    `json:"name"`
+	AppAid uuid.UUID `json:"-"` // 序列化时忽略此字段
+}
+
+type TableData struct {
+	Fields  []Field
+	Records []map[string]interface{}
 }
 
 type Field struct {
 	Name string `json:"name"`
 	Type string `json:"type"`
 }
-
-type Record map[string]interface{}
