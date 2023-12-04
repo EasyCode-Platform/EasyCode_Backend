@@ -106,4 +106,18 @@ func (r *Router) RegisterRouters(engine *gin.Engine) {
 	// // status router
 	// statusRouter.GET("", r.Controller.GetStatus)
 
+	//database-manager  routers
+	databaseManagerGroup := engine.Group("/database-manager")
+
+	//database-manager GET /apps  router
+	databaseManagerGroup.GET("/apps", r.Controller.GetAppsDataHandler)
+
+	databaseManagerGroup.POST("/apps/:aid/tables", r.Controller.CreateTableHandler)
+
+	databaseManagerGroup.PUT("/apps/:aid/tables/:tid", r.Controller.RenameTableHandler)
+
+	databaseManagerGroup.DELETE("/apps/:aid/tables/:tid", r.Controller.DeleteTableHandler)
+
+	databaseManagerGroup.GET("/apps/:aid/tables/:tid", r.Controller.GetTableData)
+
 }

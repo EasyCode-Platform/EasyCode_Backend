@@ -23,6 +23,36 @@ create table if not exists apps (
     updated_at timestamp not null
 );
 
+--app_data
+CREATE TABLE IF NOT EXISTS app_data (
+     aid bytea NOT NULL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+--tables
+CREATE TABLE IF NOT EXISTS tables (
+    tid bytea NOT NULL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    app_aid bytea,
+    FOREIGN KEY (app_aid) REFERENCES app_data(aid)
+);
+
+CREATE TABLE IF NOT EXISTS table_fields (
+    field_id SERIAL PRIMARY KEY,
+    tid bytea NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    FOREIGN KEY (tid) REFERENCES tables(tid)
+);
+
+CREATE TABLE IF NOT EXISTS table_records (
+    record_id SERIAL PRIMARY KEY,
+    tid bytea NOT NULL,
+    field_name VARCHAR(255) NOT NULL,
+    field_value TEXT,
+   FOREIGN KEY (tid) REFERENCES tables(tid),
+   FOREIGN KEY (field_name) REFERENCES table_fields(name)
+);
+
 GRANT ALL PRIVILEGES ON TABLE apps TO ec_backend;
 
-GRANT ALL PRIVILEGES ON TABLE apps_id_seq TO ec_backend;

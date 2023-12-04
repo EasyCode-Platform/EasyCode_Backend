@@ -2,6 +2,9 @@ package controller
 
 import (
 	"encoding/json"
+	"github.com/EasyCode-Platform/EasyCode_Backend/src/utils/logger"
+	"github.com/google/uuid"
+	"net/http"
 
 	"github.com/EasyCode-Platform/EasyCode_Backend/src/model"
 	"github.com/EasyCode-Platform/EasyCode_Backend/src/request"
@@ -115,4 +118,134 @@ func (controller *Controller) RetrieveApp(c *gin.Context) {
 		return
 	}
 	// get request
+}
+
+// GetAppsData
+// @param none
+func (controller *Controller) GetAppsDataHandler(c *gin.Context) {
+
+	newLogger := logger.NewSugardLogger()
+
+	apps, err := model.GetApps(newLogger)
+
+	if err != nil {
+		controller.FeedbackInternalServerError(c, "Error fetching appsdata", err.Error())
+		return
+	}
+
+	// 使用 GetAppResponse 结构构造响应
+	response := response.GetAppResponse{
+		AppsData: apps,
+	}
+
+	c.JSON(http.StatusOK, response)
+}
+
+// CreateTable
+// @param none
+func (controller *Controller) CreateTableHandler(c *gin.Context) {
+
+	newLogger := logger.NewSugardLogger()
+	aid := c.Param("aid") // 获取路由参数
+
+	appAid, _ := uuid.Parse(aid)
+
+	table, err := model.CreateNewTable(appAid, newLogger)
+	if err != nil {
+		controller.FeedbackInternalServerError(c, "Error fetch CreateNewTable", err.Error())
+		return
+	}
+
+	response := response.CreateTableResponse{
+		Table: *table,
+	}
+	c.JSON(http.StatusOK, response)
+
+}
+
+// UpdateTable
+// @param name,tid
+func (controller *Controller) RenameTableHandler(c *gin.Context) {
+	// 鉴权逻辑
+
+	// 创建新的日志记录器
+	newLogger := logger.NewSugardLogger()
+
+	// 获取路由参数
+	tid := c.Param("tid") // 表ID
+
+	// 解析请求体
+	req := request.NewTableRenameRequest()
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// 解析 UUIDs
+	tableTid, _ := uuid.Parse(tid)
+
+	// 调用模型函数以更新表信息
+	updatedTable, err := model.RenameTable(tableTid, req.Table.Name, newLogger)
+
+	if err != nil {
+		controller.FeedbackInternalServerError(c, "Error Renaming table ", err.Error())
+		return
+	}
+
+	// 构造响应
+	response := response.RenameTableResponse{
+		Table: *updatedTable,
+	}
+
+	c.JSON(http.StatusOK, response)
+}
+
+// DeleteTable
+// @param none
+func (controller *Controller) DeleteTableHandler(c *gin.Context) {
+
+	newLogger := logger.NewSugardLogger()
+	tid := c.Param("tid") // 获取路由参数
+
+	u, err := uuid.Parse(tid)
+	if err != nil {
+		// 处理UUID解析错误
+		controller.FeedbackInternalServerError(c, "Invalid UUID format", err.Error())
+		return
+	}
+
+	err = model.DeleteTable(u, newLogger)
+	if err != nil {
+		controller.FeedbackInternalServerError(c, "Error deleting table", err.Error())
+		return
+	}
+
+	// 删除成功，返回状态码200，无内容
+	c.Status(http.StatusOK)
+}
+
+// GetAppsData
+// @param none
+func (controller *Controller) GetTableData(c *gin.Context) {
+
+	newLogger := logger.NewSugardLogger()
+	tid := c.Param("tid") // 获取路由参数
+
+	u, err := uuid.Parse(tid)
+
+	field, record, err := model.GetTableData(u, newLogger)
+
+	if err != nil {
+		controller.FeedbackInternalServerError(c, "Error fetching appsdata", err.Error())
+		return
+	}
+
+	// 使用 GetAppResponse 结构构造响应
+	response := response.GetTableDataResponse{
+		Field:  field,
+		Record: record,
+	}
+
+	c.JSON(http.StatusOK, response)
 }

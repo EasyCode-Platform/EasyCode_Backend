@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"github.com/EasyCode-Platform/EasyCode_Backend/src/model"
+	"github.com/EasyCode-Platform/EasyCode_Backend/src/entities"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -26,7 +26,7 @@ func NewAppStorage(logger *zap.SugaredLogger, db *gorm.DB) *AppStorage {
 // @param app
 // @return int app.id
 // @return error
-func (impl *AppStorage) CreateApp(app *model.App) (int, error) {
+func (impl *AppStorage) CreateApp(app *entities.App) (int, error) {
 	if err := impl.db.Create(app).Error; err != nil {
 		return 0, err
 	}
@@ -38,8 +38,8 @@ func (impl *AppStorage) CreateApp(app *model.App) (int, error) {
 // @param teamId
 // @return []*model.App
 // @return error
-func (impl *AppStorage) RetrieveAllApp(teamId int) ([]*model.App, error) {
-	var apps []*model.App
+func (impl *AppStorage) RetrieveAllApp(teamId int) ([]*entities.App, error) {
+	var apps []*entities.App
 	if err := impl.db.Where("team_id = ?", teamId).Find(&apps).Error; err != nil {
 		return nil, err
 	}
@@ -51,8 +51,8 @@ func (impl *AppStorage) RetrieveAllApp(teamId int) ([]*model.App, error) {
 // @param id
 // @return *model.App
 // @return error
-func (impl *AppStorage) RetrieveAppByUid(uid int) (*model.App, error) {
-	var app *model.App
+func (impl *AppStorage) RetrieveAppByUid(uid int) (*entities.App, error) {
+	var app *entities.App
 	if err := impl.db.First(&app, uid).Error; err != nil {
 		impl.logger.Errorw("Failed to retrieve app by uid", "uid", uid, "error", err)
 		return nil, err
@@ -66,8 +66,8 @@ func (impl *AppStorage) RetrieveAppByUid(uid int) (*model.App, error) {
 // @param name
 // @return []*model.App
 // @return error
-func (impl *AppStorage) RetrieveAppByName(teamId int, name string) ([]*model.App, error) {
-	var apps []*model.App
+func (impl *AppStorage) RetrieveAppByName(teamId int, name string) ([]*entities.App, error) {
+	var apps []*entities.App
 	if err := impl.db.Where("teamID = ? and name = ?", teamId, name).Find(&apps).Error; err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func (impl *AppStorage) RetrieveAppByName(teamId int, name string) ([]*model.App
 // @receiver impl
 // @param app
 // @return error
-func (impl *AppStorage) UpdateApp(app *model.App) error {
+func (impl *AppStorage) UpdateApp(app *entities.App) error {
 	if err := impl.db.Save(app).Error; err != nil {
 		return err
 	}
