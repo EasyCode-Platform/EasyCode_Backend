@@ -1,49 +1,49 @@
 package response
 
 import (
-	"github.com/EasyCode-Platform/EasyCode_Backend/src/entities"
+	"github.com/EasyCode-Platform/EasyCode_Backend/src/model"
 )
 
 type AppListResponse struct {
-	AppList []*entities.App
+	AppList []*model.App
 }
 
 func (impl *AppListResponse) ExportForFeedback() interface{} {
 	return impl.AppList
 }
 
-func NewAppListResponse(appList []*entities.App) *AppListResponse {
+func NewAppListResponse(appList []*model.App) *AppListResponse {
 	return &AppListResponse{
 		AppList: appList,
 	}
 }
 
 type AppResponse struct {
-	App *entities.App
+	App *model.App
 }
 
 func (impl *AppResponse) ExportForFeedback() interface{} {
 	return impl.App
 }
 
-func NewAppResponse(app *entities.App) *AppResponse {
+func NewAppResponse(app *model.App) *AppResponse {
 	return &AppResponse{
 		App: app,
 	}
 }
 
 type GetAppResponse struct {
-	AppsData []entities.AppData `json:"appsdata"`
+	AppsData []model.AppData `json:"appsdata"`
 }
 
 type CreateTableResponse struct {
-	Table entities.Table `json:"table"`
+	Table model.Table `json:"table"`
 }
 
 type RenameTableResponse struct {
-	Table entities.Table `json:"table"`
+	Table model.Table `json:"table"`
 }
 
 type GetTableDataResponse struct {
-	TableData entities.TableData
+	TableData model.TableData
 }

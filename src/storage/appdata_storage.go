@@ -2,7 +2,7 @@ package storage
 
 import (
 	"database/sql"
-	"github.com/EasyCode-Platform/EasyCode_Backend/src/entities"
+	"github.com/EasyCode-Platform/EasyCode_Backend/src/model"
 	"github.com/google/uuid"
 
 	"log"
@@ -18,7 +18,7 @@ func NewPostgresqlStorage(db *sql.DB) *PostgresqlStorage {
 }
 
 // InsertApp 插入一个应用数据到数据库
-func (ps *PostgresqlStorage) InsertApp(appData entities.AppData) error {
+func (ps *PostgresqlStorage) InsertApp(appData model.AppData) error {
 	// 准备 SQL 语句，注意 PostgreSQL 使用 $1, $2 等作为占位符
 	query := "INSERT INTO app_data (aid, name) VALUES ($1, $2)"
 	// 执行 SQL 语句
@@ -31,7 +31,7 @@ func (ps *PostgresqlStorage) InsertApp(appData entities.AppData) error {
 }
 
 // InsertTable 插入一个数据表数据到数据库
-func (ps *PostgresqlStorage) InsertTable(tableData entities.Table) error {
+func (ps *PostgresqlStorage) InsertTable(tableData model.Table) error {
 	// 准备 SQL 语句，注意 PostgreSQL 使用 $1, $2 等作为占位符
 	query := "INSERT INTO tables (tid, name, app_aid) VALUES ($1, $2, $3)"
 	// 执行 SQL 语句
@@ -43,7 +43,7 @@ func (ps *PostgresqlStorage) InsertTable(tableData entities.Table) error {
 	return nil
 }
 
-func (ps *PostgresqlStorage) GetAppsData() ([]entities.AppData, error) {
+func (ps *PostgresqlStorage) GetAppsData() ([]model.AppData, error) {
 	// 查询以获取应用数据和关联的表信息
 	query := `
     SELECT ad.aid, ad.name, t.tid, t.name, t.app_aid
@@ -58,8 +58,8 @@ func (ps *PostgresqlStorage) GetAppsData() ([]entities.AppData, error) {
 	}
 	defer rows.Close()
 
-	var apps []entities.AppData
-	var currentApp *entities.AppData
+	var apps []model.AppData
+	var currentApp *model.AppData
 
 	// 遍历查询结果
 	for rows.Next() {
@@ -79,15 +79,15 @@ func (ps *PostgresqlStorage) GetAppsData() ([]entities.AppData, error) {
 			if currentApp != nil {
 				apps = append(apps, *currentApp)
 			}
-			currentApp = &entities.AppData{
+			currentApp = &model.AppData{
 				Aid:    aid,
 				Name:   appName,
-				Tables: []entities.Table{}, // 初始化 Tables 切片
+				Tables: []model.Table{}, // 初始化 Tables 切片
 			}
 		}
 
-		var table entities.Table // 初始化 table 变量
-		table.AppAid = appAid    // 设置 table 的 Aid 字段
+		var table model.Table // 初始化 table 变量
+		table.AppAid = appAid // 设置 table 的 Aid 字段
 
 		if tidStr.Valid {
 			tidUUID, err := uuid.Parse(tidStr.String)
@@ -112,7 +112,7 @@ func (ps *PostgresqlStorage) GetAppsData() ([]entities.AppData, error) {
 	return apps, nil
 }
 
-func (ps *PostgresqlStorage) CreateNewTable(aid uuid.UUID) (*entities.Table, error) {
+func (ps *PostgresqlStorage) CreateNewTable(aid uuid.UUID) (*model.Table, error) {
 	// 生成一个新的 Table ID (tid)，使用 UUID/NanoID
 	tid := uuid.New()
 
@@ -124,7 +124,7 @@ func (ps *PostgresqlStorage) CreateNewTable(aid uuid.UUID) (*entities.Table, err
     `
 
 	// 执行 SQL 语句
-	var table entities.Table
+	var table model.Table
 	err := ps.db.QueryRow(query, tid, "未命名表单", aid).Scan(&table.Tid, &table.Name)
 	if err != nil {
 		log.Println("Error creating new table:", err)
@@ -135,7 +135,7 @@ func (ps *PostgresqlStorage) CreateNewTable(aid uuid.UUID) (*entities.Table, err
 	return &table, nil
 }
 
-func (ps *PostgresqlStorage) RenameTable(tid uuid.UUID, newName string) (*entities.Table, error) {
+func (ps *PostgresqlStorage) RenameTable(tid uuid.UUID, newName string) (*model.Table, error) {
 	// 定义更新表名的 SQL 语句
 	updateQuery := `
     	UPDATE tables
@@ -156,7 +156,7 @@ func (ps *PostgresqlStorage) RenameTable(tid uuid.UUID, newName string) (*entiti
 		WHERE tid = $1;`
 
 	// 执行查询语句
-	var table entities.Table
+	var table model.Table
 	err = ps.db.QueryRow(selectQuery, tid).Scan(&table.Tid, &table.Name)
 	if err != nil {
 		log.Println("Error fetching updated table:", err)
@@ -185,7 +185,7 @@ func (ps *PostgresqlStorage) DeleteTable(tid uuid.UUID) error {
 	return nil
 }
 
-func (ps *PostgresqlStorage) GetTableData(tid uuid.UUID) (entities.TableData, error) {
+func (ps *PostgresqlStorage) GetTableData(tid uuid.UUID) (model.TableData, error) {
 	// 查询字段数据
 	fieldQuery := `
         SELECT name, type
@@ -196,11 +196,11 @@ func (ps *PostgresqlStorage) GetTableData(tid uuid.UUID) (entities.TableData, er
 	fieldRows, err := ps.db.Query(fieldQuery, tid)
 	if err != nil {
 		log.Println("Error querying table fields:", err)
-		return entities.TableData{}, err
+		return model.TableData{}, err
 	}
 	defer fieldRows.Close()
 
-	var fields []entities.Field
+	var fields []model.Field
 
 	for fieldRows.Next() {
 		var name string
@@ -209,10 +209,10 @@ func (ps *PostgresqlStorage) GetTableData(tid uuid.UUID) (entities.TableData, er
 		err := fieldRows.Scan(&name, &fieldType)
 		if err != nil {
 			log.Println("Error scanning table fields:", err)
-			return entities.TableData{}, err
+			return model.TableData{}, err
 		}
 
-		field := entities.Field{
+		field := model.Field{
 			Name: name,
 			Type: fieldType,
 		}
@@ -230,7 +230,7 @@ func (ps *PostgresqlStorage) GetTableData(tid uuid.UUID) (entities.TableData, er
 	recordRows, err := ps.db.Query(recordQuery, tid)
 	if err != nil {
 		log.Println("Error querying table records:", err)
-		return entities.TableData{}, err
+		return model.TableData{}, err
 	}
 	defer recordRows.Close()
 
@@ -245,7 +245,7 @@ func (ps *PostgresqlStorage) GetTableData(tid uuid.UUID) (entities.TableData, er
 		err := recordRows.Scan(&entityID, &fieldName, &fieldValue)
 		if err != nil {
 			log.Println("Error scanning table records:", err)
-			return entities.TableData{}, err
+			return model.TableData{}, err
 		}
 
 		// 检查是否已存在该 entityID 的记录
@@ -262,7 +262,7 @@ func (ps *PostgresqlStorage) GetTableData(tid uuid.UUID) (entities.TableData, er
 		records = append(records, record)
 	}
 
-	tableData := entities.TableData{
+	tableData := model.TableData{
 		Fields:  fields,
 		Records: records,
 	}

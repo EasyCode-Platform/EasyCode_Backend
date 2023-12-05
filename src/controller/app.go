@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"github.com/EasyCode-Platform/EasyCode_Backend/src/storage"
 	"github.com/EasyCode-Platform/EasyCode_Backend/src/utils/logger"
 	"github.com/google/uuid"
 	"net/http"
@@ -126,7 +127,7 @@ func (controller *Controller) GetAppsDataHandler(c *gin.Context) {
 
 	newLogger := logger.NewSugardLogger()
 
-	apps, err := model.GetApps(newLogger)
+	apps, err := storage.GetApps(newLogger)
 
 	if err != nil {
 		controller.FeedbackInternalServerError(c, "Error fetching appsdata", err.Error())
@@ -150,7 +151,7 @@ func (controller *Controller) CreateTableHandler(c *gin.Context) {
 
 	appAid, _ := uuid.Parse(aid)
 
-	table, err := model.CreateNewTable(appAid, newLogger)
+	table, err := storage.CreateNewTable(appAid, newLogger)
 	if err != nil {
 		controller.FeedbackInternalServerError(c, "Error fetch CreateNewTable", err.Error())
 		return
@@ -186,7 +187,7 @@ func (controller *Controller) RenameTableHandler(c *gin.Context) {
 	tableTid, _ := uuid.Parse(tid)
 
 	// 调用模型函数以更新表信息
-	updatedTable, err := model.RenameTable(tableTid, req.Table.Name, newLogger)
+	updatedTable, err := storage.RenameTable(tableTid, req.Table.Name, newLogger)
 
 	if err != nil {
 		controller.FeedbackInternalServerError(c, "Error Renaming table ", err.Error())
@@ -215,7 +216,7 @@ func (controller *Controller) DeleteTableHandler(c *gin.Context) {
 		return
 	}
 
-	err = model.DeleteTable(u, newLogger)
+	err = storage.DeleteTable(u, newLogger)
 	if err != nil {
 		controller.FeedbackInternalServerError(c, "Error deleting table", err.Error())
 		return
@@ -234,7 +235,7 @@ func (controller *Controller) GetTableData(c *gin.Context) {
 
 	u, err := uuid.Parse(tid)
 
-	tableData, err := model.GetTableData(u, newLogger)
+	tableData, err := storage.GetTableData(u, newLogger)
 
 	if err != nil {
 		controller.FeedbackInternalServerError(c, "Error fetching appsdata", err.Error())
