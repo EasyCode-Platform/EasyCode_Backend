@@ -5,6 +5,9 @@ all: build
 docker-build:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" ./src/cmd/backend/main.go
 
+install:
+	bash ./init.sh
+
 docker-run:
 	docker-compose -f ./docker-compose.yml up
 
