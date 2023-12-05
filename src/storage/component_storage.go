@@ -28,7 +28,7 @@ func NewComponentStorage(logger *zap.SugaredLogger, db *mongo.Database) *Compone
 func (impl *ComponentStorage) CreateNewComponent(componentJson string) (string, error) {
 	str, err := impl.storage.InsertToDb(componentJson)
 	if err != nil {
-		impl.logger.Errorw("failed to insert %s into mongodb", componentJson)
+		impl.logger.Errorf("failed to insert %s into mongodb", componentJson)
 		return "", err
 	}
 	return str, nil
