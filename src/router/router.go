@@ -120,4 +120,6 @@ func (r *Router) RegisterRouters(engine *gin.Engine) {
 
 	databaseManagerGroup.GET("/apps/:aid/tables/:tid", r.Controller.GetTableData)
 
+	databaseManagerGroup.POST("/apps", r.Controller.CreateAppData)
+
 }

@@ -226,7 +226,6 @@ func (controller *Controller) DeleteTableHandler(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
-// GetAppsData
 // @param none
 func (controller *Controller) GetTableData(c *gin.Context) {
 
@@ -248,4 +247,31 @@ func (controller *Controller) GetTableData(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, response)
+}
+
+// UpdateTable
+// @param name,tid
+func (controller *Controller) CreateAppData(c *gin.Context) {
+	// 鉴权逻辑
+
+	// 创建新的日志记录器
+	newLogger := logger.NewSugardLogger()
+
+	// 解析请求体
+	req := request.NewCreateAppDataRequest()
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// 调用模型函数以更新表信息
+	err := storage.CreateAppData(req.Name, newLogger)
+
+	if err != nil {
+		controller.FeedbackInternalServerError(c, "Error Renaming table ", err.Error())
+		return
+	}
+
+	c.Status(http.StatusOK)
 }

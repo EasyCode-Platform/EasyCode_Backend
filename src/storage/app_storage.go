@@ -176,7 +176,6 @@ func DeleteTable(tid uuid.UUID, logger *zap.SugaredLogger) error {
 }
 
 func GetTableData(tid uuid.UUID, logger *zap.SugaredLogger) (model.TableData, error) {
-	// 假设 config 包含全局配置
 	// 获取配置实例
 	cfg := config.GetInstance()
 
@@ -195,4 +194,25 @@ func GetTableData(tid uuid.UUID, logger *zap.SugaredLogger) (model.TableData, er
 	}
 
 	return tableData, nil
+}
+
+func CreateAppData(name string, logger *zap.SugaredLogger) error {
+	// 获取配置实例
+	cfg := config.GetInstance()
+
+	// 创建 PostgresqlStorage 实例
+	storage, err := NewPostgreStorage(cfg, logger)
+	if err != nil {
+		log.Println("Error creating postgresql entities:", err)
+		return err
+	}
+
+	// 使用 PostgresqlStorage 获取应用数据
+	err = storage.CreateNewAppData(name)
+	if err != nil {
+		log.Println("Error renaming table:", err)
+		return err
+	}
+
+	return nil
 }

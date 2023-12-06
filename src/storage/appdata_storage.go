@@ -2,6 +2,7 @@ package storage
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/EasyCode-Platform/EasyCode_Backend/src/model"
 	"github.com/google/uuid"
 
@@ -268,4 +269,29 @@ func (ps *PostgresqlStorage) GetTableData(tid uuid.UUID) (model.TableData, error
 	}
 
 	return tableData, nil
+}
+
+// CreateNewAppData 创建一个新的 app_data 记录
+func (ps *PostgresqlStorage) CreateNewAppData(appName string) error {
+	// 生成一个新的 App ID (aid)，使用 UUID
+	aid := uuid.New()
+
+	// 定义插入新 app_data 记录的 SQL 语句
+	query := `
+        INSERT INTO app_data (aid, name)
+        VALUES ($1, $2)
+        RETURNING aid, name
+    `
+
+	fmt.Println("++++++++++++" + appName)
+	// 执行 SQL 语句
+	var appData model.AppData
+	err := ps.db.QueryRow(query, aid, appName).Scan(&appData.Aid, &appData.Name)
+	if err != nil {
+		log.Println("Error creating new app_data:", err)
+		return err
+	}
+
+	// 返回新创建的 AppData
+	return nil
 }
