@@ -14,7 +14,7 @@ CREATE EXTENSION btree_gin;
 -- apps
 create table if not exists apps (
     id bigserial not null primary key,
-    uid uuid default gen_random_uuid() not null,
+    aid uuid default gen_random_uuid() not null,
     team_id int not null,
     name text not null,
     component_id text not null,
@@ -23,9 +23,9 @@ create table if not exists apps (
     updated_at timestamp not null
 );
 
---app_data
+--app_data,作为关系表格存在,确实是多余的
 CREATE TABLE IF NOT EXISTS app_data (
-     aid bytea NOT NULL PRIMARY KEY,
+    aid bytea NOT NULL PRIMARY KEY,
     name VARCHAR(255) NOT NULL
 );
 
@@ -55,7 +55,9 @@ CREATE TABLE IF NOT EXISTS table_records (
     FOREIGN KEY (tid,field_name) REFERENCES table_fields(tid,name)
 );
 
+
 GRANT ALL PRIVILEGES ON TABLE apps TO ec_backend;
+GRANT ALL PRIVILEGES ON TABLE apps_id_seq TO ec_backend;
 GRANT ALL PRIVILEGES ON TABLE  tables TO ec_backend;
 GRANT ALL PRIVILEGES ON TABLE app_data TO ec_backend;
 GRANT ALL PRIVILEGES ON TABLE table_fields TO ec_backend;

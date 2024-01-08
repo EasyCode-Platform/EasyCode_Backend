@@ -2,6 +2,7 @@ package response
 
 import (
 	"github.com/EasyCode-Platform/EasyCode_Backend/src/model"
+	"github.com/google/uuid"
 )
 
 type AppListResponse struct {
@@ -46,4 +47,8 @@ type RenameTableResponse struct {
 
 type GetTableDataResponse struct {
 	TableData model.TableData
+}
+
+type CreateAppResponse struct {
+	Aid uuid.UUID `json:"aid"`
 }

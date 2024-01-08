@@ -1,7 +1,7 @@
 package request
 
 type CreateAppRequest struct {
-	Name       string `json:"appName" validate:"required"`
+	Name       string `json:"name" validate:"required"`
 	InitScheme string `json:"initScheme"`
 }
 

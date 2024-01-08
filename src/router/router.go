@@ -122,4 +122,9 @@ func (r *Router) RegisterRouters(engine *gin.Engine) {
 
 	databaseManagerGroup.POST("/apps", r.Controller.CreateAppData)
 
+	//app routers
+	appGroup := engine.Group("")
+
+	appGroup.POST("/apps", r.Controller.CreateAppV2)
+
 }
