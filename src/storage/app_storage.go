@@ -2,8 +2,11 @@ package storage
 
 import (
 	"github.com/EasyCode-Platform/EasyCode_Backend/src/model"
+	"github.com/EasyCode-Platform/EasyCode_Backend/src/utils/config"
+	"github.com/google/uuid"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
+	"log"
 )
 
 // AppStorage
@@ -82,5 +85,134 @@ func (impl *AppStorage) UpdateApp(app *model.App) error {
 	if err := impl.db.Save(app).Error; err != nil {
 		return err
 	}
+	return nil
+}
+
+func GetApps(logger *zap.SugaredLogger) ([]model.AppData, error) {
+	// 获取配置实例
+	cfg := config.GetInstance()
+
+	// 创建 PostgresqlStorage 实例
+	storage, err := NewPostgreStorage(cfg, logger)
+	if err != nil {
+		log.Println("Error creating postgresql entities:", err)
+		return nil, err
+	}
+
+	// 使用 PostgresqlStorage 获取应用数据
+	apps, err := storage.GetAppsData()
+	if err != nil {
+		log.Println("Error getting apps:", err)
+		return nil, err
+	}
+
+	return apps, nil
+}
+
+func CreateNewTable(aid uuid.UUID, logger *zap.SugaredLogger) (*model.Table, error) {
+	// 假设 config 包含全局配置
+	// 获取配置实例
+	cfg := config.GetInstance()
+
+	// 创建 PostgresqlStorage 实例
+	storage, err := NewPostgreStorage(cfg, logger)
+	if err != nil {
+		log.Println("Error creating postgresql entities:", err)
+		return nil, err
+	}
+
+	// 使用 PostgresqlStorage 获取应用数据
+	table, err := storage.CreateNewTable(aid)
+	if err != nil {
+		log.Println("Error creating table:", err)
+		return nil, err
+	}
+
+	return table, nil
+}
+
+func RenameTable(tid uuid.UUID, name string, logger *zap.SugaredLogger) (*model.Table, error) {
+	// 假设 config 包含全局配置
+	// 获取配置实例
+	cfg := config.GetInstance()
+
+	// 创建 PostgresqlStorage 实例
+	storage, err := NewPostgreStorage(cfg, logger)
+	if err != nil {
+		log.Println("Error creating postgresql entities:", err)
+		return nil, err
+	}
+
+	// 使用 PostgresqlStorage 获取应用数据
+	table, err := storage.RenameTable(tid, name)
+	if err != nil {
+		log.Println("Error renaming table:", err)
+		return nil, err
+	}
+
+	return table, nil
+}
+
+func DeleteTable(tid uuid.UUID, logger *zap.SugaredLogger) error {
+	// 假设 config 包含全局配置
+	// 获取配置实例
+	cfg := config.GetInstance()
+
+	// 创建 PostgresqlStorage 实例
+	storage, err := NewPostgreStorage(cfg, logger)
+	if err != nil {
+		log.Println("Error creating postgresql entities:", err)
+		return err
+	}
+
+	// 使用 PostgresqlStorage 获取应用数据
+	err = storage.DeleteTable(tid)
+	if err != nil {
+		log.Println("Error renaming table:", err)
+		return err
+	}
+
+	return nil
+}
+
+func GetTableData(tid uuid.UUID, logger *zap.SugaredLogger) (model.TableData, error) {
+	// 获取配置实例
+	cfg := config.GetInstance()
+
+	// 创建 PostgresqlStorage 实例
+	storage, err := NewPostgreStorage(cfg, logger)
+	if err != nil {
+		log.Println("Error creating postgresql entities:", err)
+		return model.TableData{}, err
+	}
+
+	// 使用 PostgresqlStorage 获取应用数据
+	tableData, err := storage.GetTableData(tid)
+	if err != nil {
+		log.Println("Error renaming table:", err)
+		return model.TableData{}, err
+	}
+
+	return tableData, nil
+}
+
+func CreateAppData(name string, logger *zap.SugaredLogger) error {
+	// 获取配置实例
+	cfg := config.GetInstance()
+
+	// 创建 PostgresqlStorage 实例
+	storage, err := NewPostgreStorage(cfg, logger)
+	if err != nil {
+		log.Println("Error creating postgresql entities:", err)
+		return err
+	}
+
+	// 使用 PostgresqlStorage 获取应用数据
+	err = storage.CreateNewAppData(name)
+	if err != nil {
+		log.Println("Error renaming table:", err)
+		return err
+	}
+
 	return nil
 }

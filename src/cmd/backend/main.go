@@ -15,6 +15,7 @@ import (
 	"github.com/EasyCode-Platform/EasyCode_Backend/src/utils/recovery"
 	"github.com/EasyCode-Platform/EasyCode_Backend/src/utils/tokenvalidator"
 	"github.com/gin-gonic/gin"
+	_ "github.com/lib/pq"
 	"go.uber.org/zap"
 )
 

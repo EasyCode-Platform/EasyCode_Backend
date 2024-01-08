@@ -1,6 +1,7 @@
-package storage
+package test
 
 import (
+	storage2 "github.com/EasyCode-Platform/EasyCode_Backend/src/storage"
 	"testing"
 
 	"github.com/EasyCode-Platform/EasyCode_Backend/src/driver/mongodb"
@@ -25,7 +26,7 @@ func Test_Storage(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error in startup, mongodb init failed")
 	}
-	storage := NewStorage(postgresDriver, mongodbDriver, logger)
+	storage := storage2.NewStorage(postgresDriver, mongodbDriver, logger)
 
 	ComponentId, err := storage.ComponentStorage.CreateNewComponent(`{
   "squadName": "Super hero squad",

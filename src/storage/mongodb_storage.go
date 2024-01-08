@@ -63,6 +63,34 @@ func (m *MongoDbStorage) InsertToDb(wantStr string) (string, error) {
 	return id.Hex(), nil
 }
 
+func (m *MongoDbStorage) InsertToDb02(wantStr string) (string, error) {
+	var want interface{}
+
+	// 当 wantStr 不为空时，尝试转换为 BSON
+	if wantStr != "" {
+		var err error
+		want, err = m.jsonStr2Bson(wantStr)
+		if err != nil {
+			return "", err
+		}
+	} else {
+		// 当 wantStr 为空时，创建一个空的 BSON 对象
+		want = bson.M{}
+	}
+
+	res, err := m.collection.InsertOne(context.TODO(), want)
+	if err != nil {
+		return "", err
+	}
+
+	id, ok := res.InsertedID.(primitive.ObjectID)
+	if !ok {
+		return "", errors.New("断言错误")
+	}
+
+	return id.Hex(), nil
+}
+
 // FindInfoByField 通过字段与KEY进行查询
 // @receiver m
 // @param field

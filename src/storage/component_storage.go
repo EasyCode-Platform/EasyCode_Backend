@@ -34,6 +34,15 @@ func (impl *ComponentStorage) CreateNewComponent(componentJson string) (string, 
 	return str, nil
 }
 
+func (impl *ComponentStorage) IntialNewComponent() (string, error) {
+	str, err := impl.storage.InsertToDb02("")
+	if err != nil {
+		impl.logger.Errorw("failed to initialize into mongodb")
+		return "", err
+	}
+	return str, nil
+}
+
 // RetrieveComponent
 // @receiver impl
 // @param ComponentId
